@@ -1,0 +1,28 @@
+# Virtual Environment
+.venv/
+venv/
+ENV/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment & Secrets (Supabase credentials)
+.env
+.env.*
+!.env.example
+
+# Local SQLite databases (since you're on Supabase)
+*.sqlite3
+db.sqlite3
+
+# Static collected / Media uploads (good practice)
+media/
+staticfiles/
+
+# IDE / OS junk
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
