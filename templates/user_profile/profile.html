@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+</head>
+<body>
+    <div class="profile-container">
+        <h2>Edit Profile</h2>
+        
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- General Form Errors -->
+            {% if form.non_field_errors %}
+                <div class="error-msg">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="field-wrapper">
+                <h3>Username: </h3>
+                
+            </div>
+
+            <!-- Full Name Field -->
+            <div class="field-wrapper">
+                <h3>Full Name: </h3>
+                {{ form.full_name.label_tag }}
+                {{ form.full_name }}
+                {% if form.full_name.errors %}
+                    <span class="field-error">{{ form.full_name.errors }}</span>
+                {% endif %}
+            </div>
+
+            <!-- Bio Field -->
+            <div class="field-wrapper">
+                <h3>Bio: </h3>
+                {{ form.bio.label_tag }}
+                {{ form.bio }}
+                {% if form.bio.errors %}
+                    <span class="field-error">{{ form.bio.errors }}</span>
+                {% endif %}
+            </div>
+
+            <!-- Profile Image Field -->
+            <div class="field-wrapper">
+                {{ form.profile_image.label_tag }}
+                {{ form.profile_image }}
+                {% if form.profile_image.errors %}
+                    <span class="field-error">{{ form.profile_image.errors }}</span>
+                {% endif %}
+            </div>
+
+            <button type="submit">Save Changes</button>
+        </form>
+
+        <br>
+        <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+    </div>
+
+</body>
+</html>

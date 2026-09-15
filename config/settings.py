@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
 from pathlib import Path
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,6 +19,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
+
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+
+# Read the .env file from the root directory
+environ.Env.read_env(BASE_DIR / '.env')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-9rprssz#!yn#_$eq)c(nxwqgv!4un(d2jh@=m(fkg=tz1y(+r2'
@@ -37,8 +45,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts',
-    'home',
+
+    'apps.accounts',
+    'apps.home',
+    'apps.user_profile',
+    'apps.user_settings',
 ]
 
 MIDDLEWARE = [
@@ -81,15 +92,19 @@ WSGI_APPLICATION = 'config.wsgi.application'
 #     }
 # }
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "postgres",
+#         "USER": "postgres.sxzgjcyjgkesxphkpsrl",
+#         "PASSWORD": "a_strong_password",
+#         "HOST": "aws-0-ap-northeast-1.pooler.supabase.com",
+#         "PORT": "5432",
+#     }
+# }
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "postgres",
-        "USER": "postgres.sxzgjcyjgkesxphkpsrl",
-        "PASSWORD": "a_strong_password",
-        "HOST": "aws-0-ap-northeast-1.pooler.supabase.com",
-        "PORT": "5432",
-    }
+    'default': env.db('DATABASE_URL')
 }
 
 
@@ -141,3 +156,8 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+# Media
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
