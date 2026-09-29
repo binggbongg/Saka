@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Audits & Establishments</title>
+</head>
+<body>
+    <header>
+        <h2>Accessibility Audits</h2>
+        <a href="{% url 'dashboard' %}">Back to Dashboard</a> | 
+        <a href="{% url 'create_audit' %}">+ Submit New Audit</a>
+    </header>
+    <hr>
+
+    <h3>Recent Audits</h3>
+    {% if audits %}
+        <ul>
+            {% for audit in audits %}
+                <li>
+                    <strong>{{ audit.establishment.name }}</strong> 
+                    (Submitted by {{ audit.submitted_by_user.username }} on {{ audit.created_at|date:"M d, Y" }})
+                    - <a href="{% url 'audit_detail' audit.audit_id %}">View Audit Details</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No accessibility audits recorded yet.</p>
+    {% endif %}
+</body>
+</html>
