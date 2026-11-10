@@ -1,31 +1,59 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Audits & Establishments</title>
-</head>
-<body>
-    <header>
-        <h2>Accessibility Audits</h2>
-        <a href="{% url 'dashboard' %}">Back to Dashboard</a> | 
-        <a href="{% url 'create_audit' %}">+ Submit New Audit</a>
-    </header>
-    <hr>
 
-    <h3>Recent Audits</h3>
-    {% if audits %}
-        <ul>
-            {% for audit in audits %}
-                <li>
-                    <strong>{{ audit.establishment.name }}</strong> 
-                    (Submitted by {{ audit.submitted_by_user.username }} on {{ audit.created_at|date:"M d, Y" }})
-                    - <a href="{% url 'audit_detail' audit.audit_id %}">View Audit Details</a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No accessibility audits recorded yet.</p>
-    {% endif %}
-</body>
-</html>
+{% block title %}Community Audits - Saka{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/audits/audits_page.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="feed-container">
+    <header class="feed-header">
+        <div>
+            <h2>Community Audits</h2>
+        </div>
+        <a href="{% url 'create_audit' %}" class="btn-new-audit">+ New Audit</a>
+    </header>
+
+    {% for audit in audits %}
+        <article class="audit-card">
+            <div class="vote-column">
+                <span class="vote-arrow">▲</span>
+                <span class="vote-count">{{ audit.verifications.count }}</span>
+                <span class="vote-label">checks</span>
+            </div>
+
+            <div class="card-main">
+                <div class="post-meta">
+                    <span class="establishment-category">{{ audit.establishment.category }}</span> 
+                    • Posted by u/{{ audit.submitted_by_user.username }} {{ audit.created_at|timesince }} ago
+                </div>
+
+                <h3 class="establishment-title">
+                    <a href="{% url 'audit_detail' audit.audit_id %}">
+                        {{ audit.establishment.name }}
+                    </a>
+                </h3>
+                <p class="establishment-address">{{ audit.establishment.address_text }}</p>
+
+                <div class="badge-list">
+                    {% if audit.has_ramp_step_free %}<span class="badge badge-active">✓ Ramp</span>{% endif %}
+                    {% if audit.has_wide_door %}<span class="badge badge-active">✓ Wide Door</span>{% endif %}
+                    {% if audit.has_elevator %}<span class="badge badge-active">✓ Elevator</span>{% endif %}
+                    {% if audit.has_accessible_restroom %}<span class="badge badge-active">✓ PWD Restroom</span>{% endif %}
+                    {% if audit.has_tactical_signage %}<span class="badge badge-active">✓ Tactile Signage</span>{% endif %}
+                </div>
+
+                <footer class="card-footer">
+                    <a href="{% url 'audit_detail' audit.audit_id %}">
+                        💬 View Details & Photos ({{ audit.photos.count }})
+                    </a>
+                </footer>
+            </div>
+        </article>
+    {% empty %}
+        <p class="empty-state">No audits have been posted yet. Be the first to add one!</p>
+    {% endfor %}
+</div>
+{% endblock %}

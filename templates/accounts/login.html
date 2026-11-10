@@ -1,28 +1,38 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Login</title>
-        <link rel="stylesheet" href="{% static 'css/accounts/auth.css' %}">
-    </head>
-    <body>
-        <h1>Login Account</h1>
-        {% if error %}
-            <p style="color: red;">{{ error }}</p>
-        {% endif %}
-        <form method="POST" action="{% url 'login' %}">
-            {% csrf_token %}
-            <div>
-                <p>Username:</p>
-                <input type="text" placeholder="username" name="username" required>
-            </div>
-            <div>
-                <p>Password</p>
-                <input type="password" placeholder="password" name="password" required>
-            </div>
-            <button type="submit">Login</button>
-        </form>
-        <p class="description">Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
-    </body>
-</html>
+
+{% block title %}Log In - Saka{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/accounts/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <h1>Log In</h1>
+    <p class="auth-subtitle">Sign in to report and verify accessibility across Cebu.</p>
+
+    {% if error %}
+        <div class="auth-error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="{% url 'login' %}" class="auth-form">
+        {% csrf_token %}
+        <div class="auth-form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="Enter your username" name="username" required autocomplete="username">
+        </div>
+
+        <div class="auth-form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Enter your password" name="password" required autocomplete="current-password">
+        </div>
+
+        <button type="submit" class="auth-btn-submit">Sign In</button>
+    </form>
+
+    <p class="auth-description">
+        Don't have an account? <a href="{% url 'register' %}">Create one here</a>
+    </p>
+</div>
+{% endblock %}

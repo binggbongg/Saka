@@ -1,85 +1,120 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Audit Details - {{ audit.establishment.name }}</title>
-    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-</head>
-<body>
-    <div style="max-width: 750px; margin: 2rem auto; font-family: Arial, sans-serif;">
-        <header>
-            <a href="{% url 'audit_list' %}">&larr; Back to Audits</a>
+
+{% block title %}Audit Details - {{ audit.establishment.name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/audits/audits_page.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="feed-container" style="max-width: 760px; margin: 2rem auto; padding: 0 1rem;">
+    
+    <header class="feed-header" style="flex-direction: column; align-items: flex-start; gap: 0.5rem;">
+        <a href="{% url 'audit_list' %}" class="back-link">&larr; Back to Audits</a>
+        <div>
             <h2>{{ audit.establishment.name }}</h2>
-            <p><strong>Category:</strong> {{ audit.establishment.category }}</p>
-            <p><strong>Address:</strong> {{ audit.establishment.address_text }}</p>
-            <p><strong>Coordinates:</strong> Lat: {{ audit.establishment.latitude }}, Long: {{ audit.establishment.longitude }}</p>
-        </header>
-        <hr>
+            <p style="color: #666; font-size: 0.9rem; margin-top: 0.25rem;">
+                <span class="establishment-category">{{ audit.establishment.category }}</span> • 
+                {{ audit.establishment.address_text }}
+            </p>
+            <p style="color: #888; font-size: 0.8rem; margin-top: 0.2rem;">
+                📍 Lat: {{ audit.establishment.latitude }}, Long: {{ audit.establishment.longitude }}
+            </p>
+        </div>
+    </header>
 
-        <section>
-            <h3>Accessibility Checklist</h3>
-            <ul>
-                <li>Ramp / Step-Free Access: <strong>{% if audit.has_ramp_step_free %}✅ Yes{% else %}❌ No{% endif %}</strong></li>
-                <li>Wide Doorway: <strong>{% if audit.has_wide_door %}✅ Yes{% else %}❌ No{% endif %}</strong></li>
-                <li>Elevator: <strong>{% if audit.has_elevator %}✅ Yes{% else %}❌ No{% endif %}</strong></li>
-                <li>Accessible Restroom: <strong>{% if audit.has_accessible_restroom %}✅ Yes{% else %}❌ No{% endif %}</strong></li>
-                <li>Tactile Signage: <strong>{% if audit.has_tactical_signage %}✅ Yes{% else %}❌ No{% endif %}</strong></li>
+    <!-- Checklist Card -->
+    <article class="audit-card" style="display: block;">
+        <h3 style="margin-bottom: 0.75rem; font-size: 1.15rem;">Accessibility Features</h3>
+        <div class="badge-list" style="margin-bottom: 1rem;">
+            {% if audit.has_ramp_step_free %}
+                <span class="badge badge-active">✅ Ramp / Step-Free Access</span>
+            {% else %}
+                <span class="badge" style="background: #f8d7da; color: #721c24;">❌ No Ramp</span>
+            {% endif %}
+
+            {% if audit.has_wide_door %}
+                <span class="badge badge-active">✅ Wide Doorway</span>
+            {% else %}
+                <span class="badge" style="background: #f8d7da; color: #721c24;">❌ No Wide Door</span>
+            {% endif %}
+
+            {% if audit.has_elevator %}
+                <span class="badge badge-active">✅ Elevator Available</span>
+            {% else %}
+                <span class="badge" style="background: #f8d7da; color: #721c24;">❌ No Elevator</span>
+            {% endif %}
+
+            {% if audit.has_accessible_restroom %}
+                <span class="badge badge-active">✅ PWD Accessible Restroom</span>
+            {% else %}
+                <span class="badge" style="background: #f8d7da; color: #721c24;">❌ No Accessible Restroom</span>
+            {% endif %}
+
+            {% if audit.has_tactical_signage %}
+                <span class="badge badge-active">✅ Tactile / Braille Signage</span>
+            {% else %}
+                <span class="badge" style="background: #f8d7da; color: #721c24;">❌ No Tactile Signage</span>
+            {% endif %}
+        </div>
+        <p class="post-meta">
+            Submitted by <strong>u/{{ audit.submitted_by_user.username }}</strong> on {{ audit.created_at|date:"M d, Y H:i" }}
+        </p>
+    </article>
+
+    <!-- Photos Card -->
+    <article class="audit-card" style="display: block;">
+        <h3 style="margin-bottom: 0.75rem; font-size: 1.15rem;">Attached Photos</h3>
+        {% if photos %}
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                {% for photo in photos %}
+                    <div style="text-align: center;">
+                        <img src="{{ photo.image_url }}" alt="Audit Photo" style="max-width: 240px; height: 160px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd;">
+                        <p style="font-size: 0.75rem; color: #777; margin-top: 0.25rem;">Uploaded {{ photo.uploaded_at|date:"M d, Y" }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="color: #777; font-size: 0.9rem;">No photos attached to this audit.</p>
+        {% endif %}
+    </article>
+
+    <!-- Verifications Card -->
+    <article class="audit-card" style="display: block;">
+        <h3 style="margin-bottom: 0.75rem; font-size: 1.15rem;">Community Verifications ({{ verifications|length }})</h3>
+
+        {% if user.is_authenticated %}
+            <form method="POST" action="{% url 'verify_audit' audit.audit_id %}" style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap;">
+                {% csrf_token %}
+                <label for="action" style="font-size: 0.9rem; font-weight: 600;">Confirm or Review:</label>
+                <select name="action" id="action" style="padding: 0.35rem 0.6rem; border: 1px solid #ccc; border-radius: 4px;">
+                    <option value="verified">Confirm Accessibility (Verified)</option>
+                    <option value="upvote">Upvote</option>
+                    <option value="flagged">Needs Review / Inaccurate</option>
+                </select>
+                <button type="submit" class="btn-new-audit" style="border: none; cursor: pointer;">Submit Action</button>
+            </form>
+        {% else %}
+            <p style="font-size: 0.9rem; margin-bottom: 1rem;">
+                <a href="{% url 'login' %}" style="color: #007bff; text-decoration: none;">Log in</a> to verify or review this audit.
+            </p>
+        {% endif %}
+
+        {% if verifications %}
+            <ul style="list-style: none; padding-left: 0; display: flex; flex-direction: column; gap: 0.5rem;">
+                {% for v in verifications %}
+                    <li style="font-size: 0.85rem; padding-bottom: 0.4rem; border-bottom: 1px solid #f0f0f0;">
+                        <strong>u/{{ v.user.username }}</strong> marked this as 
+                        <span class="badge" style="background: #e2e3e5; color: #383d41;">{{ v.action }}</span>
+                        <span style="color: #888; font-size: 0.75rem; margin-left: 0.3rem;">({{ v.created_at|date:"M d, Y H:i" }})</span>
+                    </li>
+                {% endfor %}
             </ul>
-            <p><small>Submitted by <em>{{ audit.submitted_by_user.username }}</em> on {{ audit.created_at|date:"M d, Y H:i" }}</small></p>
-        </section>
-        <hr>
+        {% else %}
+            <p style="color: #777; font-size: 0.9rem;">No community verifications recorded yet. Be the first to verify!</p>
+        {% endif %}
+    </article>
 
-        <!-- Audit Photos Section -->
-        <section>
-            <h3>Uploaded Photos</h3>
-            {% if photos %}
-                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                    {% for photo in photos %}
-                        <div>
-                            <img src="{{ photo.image_url }}" alt="Audit Photo" style="max-width: 250px; height: auto; border-radius: 4px; border: 1px solid #ddd;">
-                            <p><small>Uploaded {{ photo.uploaded_at|date:"M d, Y" }}</small></p>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <p>No photos attached to this audit.</p>
-            {% endif %}
-        </section>
-        <hr>
-
-        <!-- Verification / Review Section -->
-        <section>
-            <h3>Community Verifications ({{ verifications|length }})</h3>
-
-            {% if user.is_authenticated %}
-                <form method="POST" action="{% url 'verify_audit' audit.audit_id %}" style="margin-bottom: 1rem;">
-                    {% csrf_token %}
-                    <label for="action"><strong>Confirm or Review this Audit:</strong></label>
-                    <select name="action" id="action">
-                        <option value="verified">Confirm Accessibility (Verified)</option>
-                        <option value="upvote">Upvote</option>
-                        <option value="flagged">Needs Review / Inaccurate</option>
-                    </select>
-                    <button type="submit" style="padding: 0.3rem 0.8rem; margin-left: 0.5rem;">Submit Verification</button>
-                </form>
-            {% else %}
-                <p><a href="{% url 'login' %}">Log in</a> to verify or review this audit.</p>
-            {% endif %}
-
-            {% if verifications %}
-                <ul>
-                    {% for v in verifications %}
-                        <li>
-                            <strong>{{ v.user.username }}</strong> marked this as: <em>{{ v.action }}</em> 
-                            <small>({{ v.created_at|date:"M d, Y" }})</small>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>No community verifications recorded yet.</p>
-            {% endif %}
-        </section>
-    </div>
-</body>
-</html>
+</div>
+{% endblock %}

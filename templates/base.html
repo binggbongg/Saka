@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Saka - Accessibility Audit{% endblock %}</title>
+
+    <!-- Global shared styling -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    
+    <!-- Child templates can inject extra stylesheets here -->
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- Shared Navigation Header -->
+    <header class="site-navbar">
+        <div class="nav-brand">
+            <a href="{% url 'dashboard' %}">♿ Saka</a>
+        </div>
+        
+        <nav class="nav-links">
+            {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}" class="nav-item">Dashboard</a>
+                <a href="{% url 'audit_list' %}" class="nav-item">Audits Feed</a>
+                <a href="{% url 'create_audit' %}" class="nav-item">+ Submit Audit</a>
+                <a href="{% url 'profile' %}" class="nav-item">Profile ({{ user.username }})</a>
+                <a href="{% url 'logout' %}" class="nav-item btn-nav-logout">Log Out</a>
+            {% else %}
+                <a href="{% url 'audit_list' %}" class="nav-item">Audits</a>
+                <a href="{% url 'login' %}" class="nav-item">Log In</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <!-- Dynamic Content Area -->
+    <main class="site-main">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Shared Footer -->
+    <footer class="site-footer">
+        <p>&copy; {% now "Y" %} Saka. Accessible navigation for everyone.</p>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

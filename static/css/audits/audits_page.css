@@ -1,0 +1,126 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f6f7f8;
+    color: #1a1a1b;
+    font-family: Arial, sans-serif;
+    line-height: 1.5;
+    padding: 0 1rem;
+}
+
+.feed-container {
+    max-width: 680px;
+    margin: 2rem auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* Feed Top Bar */
+.feed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #d3d6da;
+    padding-bottom: 0.85rem;
+}
+
+.feed-header h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.back-link {
+    text-decoration: none;
+    color: #555555;
+    font-size: 0.85rem;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+    color: #000000;
+}
+
+.btn-new-audit {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 0.45rem 0.9rem;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.btn-new-audit:hover {
+    background-color: #0056b3;
+}
+
+/* Post Card */
+.audit-card {
+    background: #ffffff;
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    display: flex;
+    gap: 1rem;
+}
+
+/* Upvote / Verification Column */
+.vote-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 45px;
+    color: #555555;
+    padding-top: 0.2rem;
+}
+
+.vote-arrow {
+    font-size: 0.9rem;
+    color: #28a745;
+}
+
+.vote-count {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin: 0.15rem 0;
+}
+
+.vote-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #777777;
+}
+
+/* Card Main Details */
+.card-main {
+    flex: 1;
+}
+
+.post-meta {
+    font-size: 0.82rem;
+    color: #666666;
+    margin-bottom: 0.4rem;
+}
+
+.establishment-category {
+    font-weight: 600;
+    color: #333333;
+}
+
+.establishment-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.establishment-title a {
+    text-decoration: none;
+}

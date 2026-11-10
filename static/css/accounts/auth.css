@@ -1,40 +1,107 @@
-/* Test background to instantly confirm the file is linked */
-body {
-    background-color: #f8fcd7; 
-    margin: 0;
-    min-height: 100vh;
-    
-    /* Required to make centering properties work */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-family: Arial, sans-serif;
+/* Container to center and match audit card aesthetics */
+.auth-container {
+    max-width: 440px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background: #ffffff;
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-h1 {
+.auth-container h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a1a1b;
     margin-bottom: 0.5rem;
 }
 
-p {
-    margin-bottom: 0.5rem;
-    margin-top: 0.5rem;
+.auth-subtitle {
+    font-size: 0.88rem;
+    color: #666666;
+    margin-bottom: 1.5rem;
 }
 
-button {
-    margin-top: 0.5rem;
-    padding: 0.5rem 1rem;
+/* Alert / Error messages */
+.auth-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    padding: 0.65rem 0.85rem;
+    font-size: 0.85rem;
+    margin-bottom: 1.25rem;
+}
+
+/* Form inputs & labels */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+}
+
+.auth-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.auth-form-group label {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #333333;
+}
+
+.auth-form-group input {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 0.92rem;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.auth-form-group input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.12);
+}
+
+/* Submit button matching .btn-new-audit */
+.auth-btn-submit {
+    margin-top: 0.4rem;
+    padding: 0.65rem 1rem;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-weight: 600;
     cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
-.description {
-    margin-top: 2rem;
-    font-size: 12px;
-    color:gray;
+.auth-btn-submit:hover {
+    background-color: #0056b3;
+}
+
+/* Link description at bottom */
+.auth-description {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f0f0f0;
+    font-size: 0.85rem;
+    color: #666666;
+    text-align: center;
+}
+
+.auth-description a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-description a:hover {
+    text-decoration: underline;
 }

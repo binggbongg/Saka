@@ -1,0 +1,76 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f6f7f8;
+    color: #1a1a1b;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header / Navbar */
+.site-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 0.85rem 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-brand a {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: #495057;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.15s ease;
+}
+
+.nav-item:hover {
+    color: #007bff;
+}
+
+.btn-nav-logout {
+    color: #dc3545;
+}
+
+.btn-nav-logout:hover {
+    color: #bd2130;
+}
+
+/* Main Content Wrapper */
+.site-main {
+    flex: 1; /* Pushes footer to the bottom */
+    width: 100%;
+}
+
+/* Footer */
+.site-footer {
+    background-color: #ffffff;
+    border-top: 1px solid #e1e4e8;
+    padding: 1.25rem 2rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #6c757d;
+}

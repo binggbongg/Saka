@@ -1,34 +1,43 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Register</title>
-        <link rel="stylesheet" href="{% static 'css/accounts/auth.css' %}">
-    </head>
-    <body>
-        <h1>Register Account</h1>
 
-        {% if error %}
-            <p style="color: red;">{{ error }}</p>
-        {% endif %}
+{% block title %}Register - Saka{% endblock %}
 
-        <form method="POST" action="{% url 'register' %}">
-            {% csrf_token %}
-            <div>
-                <p>Enter username: </p>
-                <input type="text" placeholder="username" name="username" required>
-            </div>
-            <div>
-                <p>Enter password:</p>
-                <input type="password" placeholder="password" name="password" required>
-            </div>
-            <div>
-                <p>Confirm password: </p>
-                <input type="password" placeholder="password" name="confirm_pass" required>
-            </div>
-            <button type="submit">Register</button>
-        </form>
-        <p class="description">Have an account? <a href="{% url 'login' %}">Login here</a></p>
-    </body>
-</html>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/accounts/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <h1>Create an Account</h1>
+    <p class="auth-subtitle">Join the community in auditing local infrastructure.</p>
+
+    {% if error %}
+        <div class="auth-error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="{% url 'register' %}" class="auth-form">
+        {% csrf_token %}
+        <div class="auth-form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="Choose a username" name="username" required autocomplete="username">
+        </div>
+
+        <div class="auth-form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="name@example.com" name="email" required autocomplete="email">
+        </div>
+
+        <div class="auth-form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Choose a strong password" name="password" required autocomplete="new-password">
+        </div>
+
+        <button type="submit" class="auth-btn-submit">Register</button>
+    </form>
+
+    <p class="auth-description">
+        Already have an account? <a href="{% url 'login' %}">Log in here</a>
+    </p>
+</div>
+{% endblock %}
