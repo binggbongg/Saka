@@ -1,35 +1,130 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f8fcd7;
-    margin: 0;
-    padding: 2rem;
+/* Dashboard Main Container */
+.dashboard-container {
+    max-width: 720px;
+    margin: 2.5rem auto;
+    padding: 0 1rem;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 80vh;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
-.dashboard-header h2 {
-    margin-bottom: 1rem;
-    color: #333333;
+/* Header & Welcome Card */
+.dashboard-card {
+    background: #ffffff;
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    padding: 1.75rem 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.dashboard-header p {
-    font-size: 1.1rem;
+.dashboard-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1a1a1b;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-subtitle {
+    font-size: 0.95rem;
     color: #555555;
+    line-height: 1.5;
     margin-bottom: 1.5rem;
 }
 
-.dashboard-header a {
+/* Quick Action Navigation Buttons */
+.dashboard-actions {
+    display: flex;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.btn-dash-primary {
     display: inline-block;
-    text-decoration: none;
     background-color: #007bff;
-    color: white;
-    padding: 0.5rem 1.2rem;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 0.6rem 1.25rem;
     border-radius: 4px;
+    font-size: 0.95rem;
+    font-weight: 600;
     transition: background-color 0.2s ease;
 }
 
-.dashboard-header a:hover {
+.btn-dash-primary:hover {
     background-color: #0056b3;
+}
+
+.btn-dash-secondary {
+    display: inline-block;
+    background-color: #ffffff;
+    color: #333333;
+    border: 1px solid #ced4da;
+    text-decoration: none;
+    padding: 0.6rem 1.25rem;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-dash-secondary:hover {
+    background-color: #f8f9fa;
+    border-color: #b1b8be;
+}
+
+.btn-dash-logout {
+    display: inline-block;
+    background-color: #dc3545;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 0.6rem 1.25rem;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-left: auto;
+    transition: background-color 0.2s ease;
+}
+
+.btn-dash-logout:hover {
+    background-color: #bd2130;
+}
+
+/* Feature Shortcuts Grid */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.shortcut-box {
+    background: #ffffff;
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.shortcut-box h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+    color: #1a1a1b;
+}
+
+.shortcut-box p {
+    font-size: 0.85rem;
+    color: #666666;
+    margin-bottom: 0.85rem;
+}
+
+.shortcut-link {
+    font-size: 0.88rem;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.shortcut-link:hover {
+    text-decoration: underline;
 }

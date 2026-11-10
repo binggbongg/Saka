@@ -1,25 +1,59 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="{% static 'css/home/dashboard.css' %}">
-</head>
-<body>
-    <div class="dashboard-header">
-        <h2>Dashboard</h2>
+
+{% block title %}Dashboard - Saka{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    
+    <div class="dashboard-card">
         {% if user.is_authenticated %}
-            <p>Welcome, <strong>{{ user.username }}</strong>!</p>
+            <h1 class="dashboard-title">Welcome back, {{ user.username }}!</h1>
+            <p class="dashboard-subtitle">
+                Explore accessibility reports, contribute new place audits, or manage your profile details.
+            </p>
+
             <div class="dashboard-actions">
-                <a href="{% url 'profile' %}" class="btn-profile">Go to Profile</a>
-                <a href="{% url 'audit_list' %}" class="btn-audits">View Audits</a>
-                <a href="{% url 'logout' %}" class="btn-logout">Log Out</a>
+                <a href="{% url 'audit_list' %}" class="btn-dash-primary">Community Audits</a>
+                <a href="{% url 'profile' %}" class="btn-dash-secondary">View Profile</a>
+                <a href="{% url 'logout' %}" class="btn-dash-logout">Log Out</a>
             </div>
         {% else %}
-            <p>You are not logged in.</p>
-            <a href="{% url 'login' %}">Go to Login</a>
+            <h1 class="dashboard-title">Welcome to Saka</h1>
+            <p class="dashboard-subtitle">
+                You are currently browsing as a guest. Log in to submit audits and verify physical accessibility features.
+            </p>
+            <div class="dashboard-actions">
+                <a href="{% url 'login' %}" class="btn-dash-primary">Log In</a>
+                <a href="{% url 'audit_list' %}" class="btn-dash-secondary">View Public Audits</a>
+            </div>
         {% endif %}
     </div>
-</body>
-</html>
+
+    <!-- Quick Shortcuts Grid -->
+    <div class="dashboard-grid">
+        <div class="shortcut-box">
+            <h3>Accessibility Feed</h3>
+            <p>Browse recent audits submitted by local contributors.</p>
+            <a href="{% url 'audit_list' %}" class="shortcut-link">Go to Audits &rarr;</a>
+        </div>
+
+        <div class="shortcut-box">
+            <h3>Submit an Audit</h3>
+            <p>Report ramps, doors, elevators, and tactile paving.</p>
+            <a href="{% url 'create_audit' %}" class="shortcut-link">Create Audit &rarr;</a>
+        </div>
+
+        <div class="shortcut-box">
+            <h3>Profile & Aid Type</h3>
+            <p>Keep your bio and mobility aid settings up to date.</p>
+            <a href="{% url 'profile' %}" class="shortcut-link">Manage Profile &rarr;</a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

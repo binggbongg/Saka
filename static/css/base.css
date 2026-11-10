@@ -6,31 +6,44 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f6f7f8;
+    background-color: #f6f7f8; /* Clean neutral background */
     color: #1a1a1b;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
 }
 
-/* Header / Navbar */
+/* 1. Header / Navbar full width */
 .site-navbar {
+    width: 100%;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e1e4e8;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Inner container keeps links nicely spaced and prevents edge touching */
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.85rem 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #ffffff;
-    padding: 0.85rem 2rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-    position: sticky;
-    top: 0;
-    z-index: 100;
 }
 
 .nav-brand a {
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     font-weight: bold;
     color: #007bff;
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
 }
 
 .nav-links {
@@ -42,7 +55,7 @@ body {
 .nav-item {
     text-decoration: none;
     color: #495057;
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     font-weight: 500;
     transition: color 0.15s ease;
 }
@@ -59,18 +72,20 @@ body {
     color: #bd2130;
 }
 
-/* Main Content Wrapper */
+/* 2. Main content takes up available vertical space */
 .site-main {
-    flex: 1; /* Pushes footer to the bottom */
+    flex: 1 0 auto;
     width: 100%;
 }
 
-/* Footer */
+/* 3. Footer stretches full width at the bottom */
 .site-footer {
+    width: 100%;
     background-color: #ffffff;
     border-top: 1px solid #e1e4e8;
-    padding: 1.25rem 2rem;
+    padding: 1.25rem 1.5rem;
     text-align: center;
     font-size: 0.85rem;
     color: #6c757d;
+    margin-top: auto;
 }
