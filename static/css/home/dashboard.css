@@ -26,15 +26,16 @@
 }
 
 .dashboard-greeting {
+    font-family: var(--font-display);
     font-size: 1rem;
-    font-weight: 600;
     color: #ffffff;
     margin-bottom: 0.75rem;
 }
 
 .dashboard-title {
+    font-family: var(--font-display);
+    font-weight: normal;
     font-size: clamp(1.9rem, 4.2vw, 3rem);
-    font-weight: 800;
     line-height: 1.2;
     letter-spacing: -0.02em;
     color: #FFEA2D;
@@ -43,6 +44,7 @@
 
 .dashboard-subtitle {
     max-width: 720px;
+    font-family: var(--font-body);
     font-size: clamp(1rem, 1.6vw, 1.15rem);
     line-height: 1.5;
     color: #dcdcdc;
@@ -62,8 +64,8 @@
     padding: 1.35rem 3.25rem;
     border: 2px solid transparent;
     border-radius: 0;
+    font-family: 'Coolvetica', Arial, sans-serif;
     font-size: clamp(1.1rem, 2vw, 1.5rem);
-    font-weight: 700;
     text-align: center;
     text-decoration: none;
     transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
@@ -106,6 +108,15 @@
     margin-top: 4rem;
 }
 
+.dashboard-grid h2 {
+    font-family: var(--font-display);
+    font-weight: normal;
+}
+
+.dashboard-grid a {
+    font-family: var(--font-body);
+}
+
 .shortcut-box {
     display: flex;
     flex-direction: column;
@@ -123,7 +134,6 @@
 
 .shortcut-box h2 {
     font-size: 1.25rem;
-    font-weight: 700;
     color: #FFEA2D;
     margin-bottom: 0.5rem;
 }
@@ -138,7 +148,6 @@
 .shortcut-link {
     margin-top: auto;
     font-size: 0.95rem;
-    font-weight: 700;
     color: #ffffff;
     text-decoration: underline;
     text-underline-offset: 4px;
