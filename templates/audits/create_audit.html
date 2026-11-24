@@ -4,93 +4,86 @@
 {% block title %}Submit Accessibility Audit - Saka{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/audits/audits_page.css' %}">
+<link rel="stylesheet" href="{% static 'css/audits/audits_page.css' %}?v=3">
 {% endblock %}
 
 {% block content %}
-<div class="feed-container" style="max-width: 650px; margin: 2rem auto; padding: 0 1rem;">
-    
-    <header class="feed-header" style="flex-direction: column; align-items: flex-start; gap: 0.5rem; margin-bottom: 1.5rem;">
-        <a href="{% url 'audit_list' %}" class="back-link">&larr; Back to Audits</a>
-        <h2>Submit Accessibility Audit</h2>
-        <p style="font-size: 0.85rem; color: #666;">
-            Report the current physical accessibility features of an establishment in Metro Cebu.
-        </p>
+<div class="audits-page audits-page--form">
+
+    <header class="page-header page-header--stacked">
+        <a href="{% url 'audit_list' %}" class="back-link">&larr; Back to audits</a>
+        <div>
+            <h1 class="page-title">Submit Accessibility Audit</h1>
+            <p class="page-lead">Report the current physical accessibility features of an establishment in Metro Cebu.</p>
+        </div>
     </header>
 
-    <div class="audit-card" style="display: block;">
-        <form method="POST" action="{% url 'create_audit' %}">
-            {% csrf_token %}
+    <form method="POST" action="{% url 'create_audit' %}" class="form-card">
+        {% csrf_token %}
 
-            <!-- Establishment Selector -->
-            <div style="margin-bottom: 1.25rem;">
-                <label for="establishment_id" style="display: block; font-weight: 600; margin-bottom: 0.4rem; font-size: 0.95rem;">
-                    Select Establishment
+        <!-- Step 1: Establishment -->
+        <div class="form-step">
+            <label for="establishment_id" class="step-title">
+                <span class="step-num" aria-hidden="true">1</span> Select establishment
+            </label>
+            <select name="establishment_id" id="establishment_id" required>
+                <option value="" disabled selected>Choose an establishment</option>
+                {% for est in establishments %}
+                    <option value="{{ est.establishment_id }}">{{ est.name }} ({{ est.category }})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Step 2: Checklist -->
+        <fieldset class="form-step">
+            <legend class="step-title">
+                <span class="step-num" aria-hidden="true">2</span> Accessibility features present
+            </legend>
+            <p class="step-hint">Tick every feature you actually saw on site.</p>
+
+            <div class="check-grid">
+                <label class="check-tile">
+                    <input type="checkbox" name="has_ramp_step_free">
+                    <span>Ramp / step-free access</span>
                 </label>
-                <select name="establishment_id" id="establishment_id" required 
-                        style="width: 100%; padding: 0.6rem; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.95rem; background-color: #fff;">
-                    <option value="" disabled selected>-- Choose an establishment --</option>
-                    {% for est in establishments %}
-                        <option value="{{ est.establishment_id }}">{{ est.name }} ({{ est.category }})</option>
-                    {% endfor %}
-                </select>
-            </div>
 
-            <!-- Accessibility Checklist -->
-            <fieldset style="border: 1px solid #e1e4e8; border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; background-color: #fafbfc;">
-                <legend style="font-weight: 600; font-size: 0.9rem; padding: 0 0.4rem; color: #333;">
-                    Accessibility Features Present
-                </legend>
-                
-                <div style="display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.25rem;">
-                    <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; cursor: pointer;">
-                        <input type="checkbox" name="has_ramp_step_free" style="width: 16px; height: 16px;">
-                        <span>Ramp / Step-Free Access</span>
-                    </label>
-
-                    <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; cursor: pointer;">
-                        <input type="checkbox" name="has_wide_door" style="width: 16px; height: 16px;">
-                        <span>Wide Doorway (Wheelchair accessible width)</span>
-                    </label>
-
-                    <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; cursor: pointer;">
-                        <input type="checkbox" name="has_elevator" style="width: 16px; height: 16px;">
-                        <span>Elevator Available for Multi-Floor Access</span>
-                    </label>
-
-                    <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; cursor: pointer;">
-                        <input type="checkbox" name="has_accessible_restroom" style="width: 16px; height: 16px;">
-                        <span>Dedicated Accessible / PWD Restroom</span>
-                    </label>
-
-                    <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; cursor: pointer;">
-                        <input type="checkbox" name="has_tactical_signage" style="width: 16px; height: 16px;">
-                        <span>Tactile Paving / Braille Signage</span>
-                    </label>
-                </div>
-            </fieldset>
-
-            <!-- Photo Upload URL -->
-            <div style="margin-bottom: 1.5rem;">
-                <label for="image_url" style="display: block; font-weight: 600; margin-bottom: 0.4rem; font-size: 0.95rem;">
-                    Photo URL (Optional)
+                <label class="check-tile">
+                    <input type="checkbox" name="has_wide_door">
+                    <span>Wide doorway (wheelchair accessible width)</span>
                 </label>
-                <input type="url" name="image_url" id="image_url" placeholder="https://example.com/photo.jpg" 
-                       style="width: 100%; padding: 0.6rem; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.9rem; box-sizing: border-box;">
-                <small style="color: #6c757d; font-size: 0.78rem; display: block; margin-top: 0.25rem;">
-                    Provide a direct link to a hosted verification photo of the ramp, entrance, or facility.
-                </small>
-            </div>
 
-            <!-- Form Actions -->
-            <div style="display: flex; gap: 0.75rem; align-items: center;">
-                <button type="submit" class="btn-new-audit" style="border: none; cursor: pointer; padding: 0.6rem 1.4rem; font-size: 0.95rem;">
-                    Submit Audit
-                </button>
-                <a href="{% url 'audit_list' %}" class="back-link" style="font-size: 0.9rem;">Cancel</a>
+                <label class="check-tile">
+                    <input type="checkbox" name="has_elevator">
+                    <span>Elevator for multi-floor access</span>
+                </label>
+
+                <label class="check-tile">
+                    <input type="checkbox" name="has_accessible_restroom">
+                    <span>Dedicated accessible / PWD restroom</span>
+                </label>
+
+                <label class="check-tile">
+                    <input type="checkbox" name="has_tactical_signage">
+                    <span>Tactile paving / braille signage</span>
+                </label>
             </div>
-        </form>
-    </div>
+        </fieldset>
+
+        <!-- Step 3: Photo -->
+        <div class="form-step">
+            <label for="image_url" class="step-title">
+                <span class="step-num" aria-hidden="true">3</span> Photo URL <span class="step-optional">(optional)</span>
+            </label>
+            <input type="url" name="image_url" id="image_url" placeholder="https://example.com/photo.jpg">
+            <p class="step-hint">Link directly to a hosted photo of the ramp, entrance, or facility.</p>
+        </div>
+
+        <!-- Actions -->
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">Submit Audit</button>
+            <a href="{% url 'audit_list' %}" class="cancel-link">Cancel</a>
+        </div>
+    </form>
 
 </div>
 {% endblock %}

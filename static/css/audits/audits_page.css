@@ -1,165 +1,651 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* ==========================================================
+   Audits: feed, establishments, detail, create
+   Uses --font-display / --font-body from base.css.
+   Palette: #FFEA2D yellow, #101010 charcoal.
+   NOTE: no global `*` or `body` rules here; base.css owns those.
+   ========================================================== */
+
+   .audits-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+    font-family: var(--font-body);
+    color: #ffffff;
 }
 
-body {
-    background-color: #f6f7f8;
-    color: #101010;
-    font-family: Arial, sans-serif;
+.audits-page--wide { max-width: 1100px; }
+.audits-page--form { max-width: 720px; }
+
+/* ---------- Page header ---------- */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.page-header--stacked {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.page-title {
+    font-family: var(--font-display);
+    font-weight: normal;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    line-height: 1.15;
+    color: #FFEA2D;
+}
+
+.page-lead {
+    margin-top: 0.5rem;
+    font-size: 1.05rem;
     line-height: 1.5;
-    padding: 0;
+    color: #dcdcdc;
 }
 
-.feed-container {
-    max-width: 680px;
-    margin: 2rem auto;
+.page-meta {
+    margin-top: 0.35rem;
+    font-size: 0.9rem;
+    color: #a8a8a8;
+}
+
+.back-link {
+    font-size: 0.95rem;
+    color: #FFEA2D;
+    text-decoration: none;
+}
+
+.back-link:hover { text-decoration: underline; }
+
+/* ---------- Buttons ---------- */
+.btn-new-audit {
+    display: inline-block;
+    padding: 0.85rem 1.6rem;
+    background-color: #FFEA2D;
+    color: #101010;
+    border: 2px solid #FFEA2D;
+    border-radius: 0;
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-new-audit:hover {
+    background-color: #101010;
+    color: #FFEA2D;
+}
+
+.btn-block { display: block; width: 100%; }
+
+.audits-page a:focus-visible,
+.audits-page button:focus-visible,
+.audits-page select:focus-visible,
+.audits-page input:focus-visible {
+    outline: 3px solid #ffffff;
+    outline-offset: 3px;
+}
+
+/* ---------- Chips, badges, counts ---------- */
+.chip {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background-color: #101010;
+    color: #FFEA2D;
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+}
+
+.page-header .chip { margin-bottom: 0.75rem; }
+
+.tab-count {
+    display: inline-block;
+    min-width: 1.5rem;
+    margin-left: 0.35rem;
+    padding: 0.05rem 0.45rem;
+    background-color: #101010;
+    color: #FFEA2D;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+/* ---------- Sub tabs ---------- */
+.tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.75rem;
+    border-bottom: 2px solid #3a3a3a;
+    overflow-x: auto;
+}
+
+.tab {
+    padding: 0.85rem 1.4rem;
+    background: transparent;
+    color: #dcdcdc;
+    border: 0;
+    border-radius: 0;
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.tab:hover { color: #FFEA2D; }
+
+.tab.is-active {
+    background-color: #FFEA2D;
+    color: #101010;
+}
+
+.tab:not(.is-active) .tab-count {
+    background-color: #FFEA2D;
+    color: #101010;
+}
+
+.tab-panel[hidden] { display: none; }
+
+.tab-panel {
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
 }
 
-/* Feed Top Bar */
-.feed-header {
+.panel-lead {
+    color: #dcdcdc;
+    font-size: 1rem;
+}
+
+/* ---------- Audit feed cards ---------- */
+.audit-card {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #FFEA2D;
-    padding-bottom: 0.85rem;
-}
-
-.feed-header h2 {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: #FFEA2D;
-}
-
-.back-link {
-    text-decoration: none;
-    color: #555555;
-    font-size: 0.85rem;
-}
-
-.back-link:hover {
-    text-decoration: underline;
-    color: #000000;
-}
-
-.btn-new-audit {
+    gap: 1.25rem;
+    padding: 1.5rem;
     background-color: #FFEA2D;
     color: #101010;
-    padding: 0.45rem 0.9rem;
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    transition: background-color 0.2s ease;
+    border: 2px solid #FFEA2D;
+    border-radius: 0;
 }
 
-.btn-new-audit:hover {
-    background-color: #c2b013;
-}
-
-/* Post Card */
-.audit-card {
-    background: #FFEA2D;
-    border: 1px solid #101010;
-    border-radius: 8px;
-    padding: 1.25rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    display: flex;
-    gap: 1rem;
-}
-
-/* Upvote / Verification Column */
 .vote-column {
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: 45px;
-    color: #555555;
-    padding-top: 0.2rem;
+    min-width: 3.5rem;
+    padding-right: 1.25rem;
+    border-right: 2px solid #101010;
 }
 
-.vote-arrow {
-    font-size: 0.9rem;
-    color: #101010;
-}
+.vote-arrow { font-size: 0.9rem; }
 
 .vote-count {
-    font-weight: 700;
-    font-size: 1.1rem;
-    margin: 0.15rem 0;
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    line-height: 1.1;
 }
 
 .vote-label {
-    font-size: 0.65rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #777777;
 }
 
-/* Card Main Details */
-.card-main {
-    flex: 1;
-}
+.card-main { flex: 1; min-width: 0; }
 
 .post-meta {
-    font-size: 0.82rem;
-    color: #666666;
-    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+    font-size: 0.85rem;
 }
 
-.establishment-category {
-    font-weight: 600;
-    color: #333333;
+.post-meta--footer {
+    margin: 1.5rem 0 0;
+    padding-top: 1rem;
+    border-top: 2px solid #101010;
 }
 
 .establishment-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 0.25rem;
+    font-family: var(--font-display);
+    font-weight: normal;
+    font-size: 1.6rem;
+    line-height: 1.2;
 }
 
 .establishment-title a {
+    color: #101010;
     text-decoration: none;
-    color: #101010;
 }
 
-.audited-establishments-section {
-    margin-top: 2.5rem;
-    padding-top: 1.5rem;
-    border-top: 2px solid #FFEA2D;
+.establishment-title a:hover { text-decoration: underline; }
+
+.establishment-address {
+    margin-top: 0.25rem;
+    font-size: 0.95rem;
 }
 
-.audited-establishments-section > h2 {
+.badge-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    list-style: none;
+}
+
+.badge {
+    padding: 0.3rem 0.7rem;
+    background-color: #101010;
     color: #FFEA2D;
-    margin-bottom: 0.25rem;
+    font-size: 0.85rem;
 }
 
-.audited-establishments-section > p {
-    color: #e1e4e8;
-    font-size: 0.9rem;
-    margin-bottom: 1.25rem;
+.card-footer {
+    margin-top: 1.1rem;
+    padding-top: 0.9rem;
+    border-top: 2px solid #101010;
 }
 
-.establishment-card {
-    background: #FFEA2D;
+.card-link {
     color: #101010;
-    border: 1px solid #101010;
-    border-radius: 6px;
-    padding: 1rem 1.25rem;
-    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+    text-decoration: underline;
+    text-underline-offset: 4px;
 }
 
-.establishment-card h3 {
-    margin-bottom: 0.35rem;
+.card-link:hover { text-decoration-thickness: 2px; }
+
+/* ---------- Establishment grid ---------- */
+.place-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+}
+
+.place-card {
+    padding: 1.5rem;
+    background-color: #FFEA2D;
+    color: #101010;
+    border: 2px solid #FFEA2D;
+    border-radius: 0;
+}
+
+.place-name {
+    margin-top: 0.75rem;
+    font-family: var(--font-display);
+    font-weight: normal;
+    font-size: 1.45rem;
+    line-height: 1.2;
+}
+
+.place-address {
+    margin-top: 0.35rem;
+    font-size: 0.95rem;
+}
+
+/* ---------- Empty states ---------- */
+.empty-state {
+    grid-column: 1 / -1;
+    padding: 2.5rem 1.5rem;
+    border: 2px dashed #3a3a3a;
+    color: #dcdcdc;
+    text-align: center;
+}
+
+.empty-note {
+    font-size: 0.95rem;
+}
+
+/* ---------- Audit detail ---------- */
+.detail-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.detail-main,
+.detail-side {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.panel-card {
+    padding: 1.75rem;
+    background-color: #FFEA2D;
+    color: #101010;
+    border-radius: 0;
+}
+
+.panel-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+    font-family: var(--font-display);
+    font-weight: normal;
+    font-size: 1.5rem;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 0.75rem;
+    list-style: none;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.9rem 1rem;
+    border: 2px solid #101010;
+}
+
+.feature.is-yes {
+    background-color: #101010;
+    color: #FFEA2D;
+}
+
+.feature.is-no {
+    border-style: dashed;
+    color: #4a4a4a;
+}
+
+.feature-icon {
+    flex: none;
+    width: 2rem;
+    height: 2rem;
+    display: grid;
+    place-items: center;
+    font-size: 1.1rem;
+    border: 2px solid currentColor;
+}
+
+.feature.is-yes .feature-icon {
+    background-color: #FFEA2D;
+    border-color: #FFEA2D;
+    color: #101010;
+}
+
+.feature-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+}
+
+.feature-name { font-size: 0.98rem; }
+.feature-status { font-size: 0.8rem; opacity: 0.85; }
+
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.photo-item img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border: 2px solid #101010;
+}
+
+.photo-item figcaption {
+    margin-top: 0.35rem;
+    font-size: 0.8rem;
+}
+
+/* Verifications */
+.verify-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid #101010;
+}
+
+.verify-form label { font-size: 0.95rem; }
+
+.login-note {
+    margin-bottom: 1.25rem;
+    font-size: 0.95rem;
+}
+
+.login-note a { color: #101010; text-underline-offset: 3px; }
+
+.verify-list {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+}
+
+.verify-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(16, 16, 16, 0.35);
+    font-size: 0.9rem;
+}
+
+.verify-item:last-child { border-bottom: 0; }
+
+.verify-date {
+    flex-basis: 100%;
+    font-size: 0.78rem;
+    color: #4a4a4a;
+}
+
+.action-chip {
+    padding: 0.15rem 0.55rem;
+    background-color: #101010;
+    color: #FFEA2D;
+    font-size: 0.8rem;
+}
+
+.action-upvote {
+    background: transparent;
+    color: #101010;
+    border: 2px solid #101010;
+    padding: 0.05rem 0.5rem;
+}
+
+.action-flagged {
+    background-color: #a30000;
+    color: #ffffff;
+}
+
+/* ---------- Shared select / input fields ---------- */
+.form-step select,
+.verify-form select,
+.form-step input[type="url"] {
+    width: 100%;
+    height: 3.5rem;
+    padding: 0 1rem;
+    background-color: transparent;
+    color: #101010;
+    border: 2px solid #101010;
+    border-radius: 0;
+    font-family: var(--font-body);
     font-size: 1.05rem;
 }
 
-.establishment-card p {
-    font-size: 0.88rem;
+.form-step select,
+.verify-form select {
+    appearance: none;
+    padding-right: 2.75rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%23101010' stroke-width='2'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    cursor: pointer;
+}
+
+.form-step input::placeholder { color: #101010; opacity: 0.6; }
+
+/* ---------- Create audit form ---------- */
+.form-card {
+    padding: 2.5rem;
+    background-color: #FFEA2D;
     color: #101010;
-    margin-bottom: 0.2rem;
+    border-radius: 0;
+}
+
+.form-step {
+    display: block;
+    margin: 0 0 2.25rem;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+}
+
+.step-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.9rem;
+    padding: 0;
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    line-height: 1.2;
+}
+
+.step-num {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    background-color: #101010;
+    color: #FFEA2D;
+    font-size: 1.1rem;
+}
+
+.step-optional {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+}
+
+.step-hint {
+    margin: 0.6rem 0 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+fieldset.form-step .step-hint { margin: 0 0 1rem; }
+
+.check-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+.check-tile {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    min-height: 3.75rem;
+    padding: 0.85rem 1rem;
+    border: 2px solid #101010;
+    font-size: 1rem;
+    line-height: 1.3;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.check-tile:hover { background-color: rgba(16, 16, 16, 0.08); }
+
+.check-tile:has(input:checked) {
+    background-color: #101010;
+    color: #FFEA2D;
+}
+
+.check-tile input {
+    flex: none;
+    appearance: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: 0;
+    background-color: transparent;
+    border: 2px solid currentColor;
+    border-radius: 0;
+    cursor: pointer;
+}
+
+.check-tile input:checked {
+    background-color: #FFEA2D;
+    border-color: #FFEA2D;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3.2 3.2L13 5' fill='none' stroke='%23101010' stroke-width='2.4'/%3E%3C/svg%3E");
+    background-size: 100% 100%;
+}
+
+.form-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.btn-submit {
+    width: 100%;
+    height: 4.25rem;
+    background-color: #101010;
+    color: #FFEA2D;
+    border: 2px solid #101010;
+    border-radius: 0;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-submit:hover {
+    background-color: #FFEA2D;
+    color: #101010;
+}
+
+.cancel-link {
+    color: #101010;
+    font-size: 1rem;
+    text-underline-offset: 3px;
+}
+
+.form-card a:focus-visible,
+.form-card button:focus-visible,
+.form-card select:focus-visible,
+.form-card input:focus-visible,
+.panel-card select:focus-visible,
+.panel-card button:focus-visible,
+.panel-card a:focus-visible {
+    outline: 3px solid #101010;
+    outline-offset: 3px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+    .detail-layout { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 600px) {
+    .audits-page { padding: 1.5rem 1rem 3rem; }
+
+    .audit-card { padding: 1.1rem; gap: 0.9rem; }
+    .vote-column { min-width: 2.75rem; padding-right: 0.9rem; }
+
+    .form-card { padding: 1.5rem 1.1rem; }
+    .check-grid { grid-template-columns: minmax(0, 1fr); }
+
+    .panel-card { padding: 1.25rem; }
 }

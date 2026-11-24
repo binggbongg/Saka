@@ -4,117 +4,139 @@
 {% block title %}Audit Details - {{ audit.establishment.name }}{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/audits/audits_page.css' %}">
+<link rel="stylesheet" href="{% static 'css/audits/audits_page.css' %}?v=3">
 {% endblock %}
 
 {% block content %}
-<div class="feed-container" style="max-width: 760px; margin: 2rem auto; padding: 0 1rem;">
-    
-    <header class="feed-header" style="flex-direction: column; align-items: flex-start; gap: 0.5rem;">
-        <a href="{% url 'audit_list' %}" class="back-link">&larr; Back to Audits</a>
+<div class="audits-page audits-page--wide">
+
+    <header class="page-header page-header--stacked">
+        <a href="{% url 'audit_list' %}" class="back-link">&larr; Back to audits</a>
         <div>
-            <h2>{{ audit.establishment.name }}</h2>
-            <p style="color: #666; font-size: 0.9rem; margin-top: 0.25rem;">
-                <span class="establishment-category">{{ audit.establishment.category }}</span> • 
-                {{ audit.establishment.address_text }}
-            </p>
-            <p style="color: #888; font-size: 0.8rem; margin-top: 0.2rem;">
-                📍 Lat: {{ audit.establishment.latitude }}, Long: {{ audit.establishment.longitude }}
+            <span class="chip">{{ audit.establishment.category }}</span>
+            <h1 class="page-title">{{ audit.establishment.name }}</h1>
+            <p class="page-lead">{{ audit.establishment.address_text }}</p>
+            <p class="page-meta">
+                Coordinates: {{ audit.establishment.latitude }}, {{ audit.establishment.longitude }}
             </p>
         </div>
     </header>
 
-    <!-- Checklist Card -->
-    <article class="audit-card" style="display: block;">
-        <h3 style="margin-bottom: 0.75rem; font-size: 1.15rem;">Accessibility Features</h3>
-        <div class="badge-list" style="margin-bottom: 1rem;">
-            {% if audit.has_ramp_step_free %}
-                <span class="badge badge-active">✅ Ramp / Step-Free Access</span>
-            {% else %}
-                <span class="badge" style="background: #f8d7da; color: #721c24;">❌ No Ramp</span>
-            {% endif %}
+    <div class="detail-layout">
 
-            {% if audit.has_wide_door %}
-                <span class="badge badge-active">✅ Wide Doorway</span>
-            {% else %}
-                <span class="badge" style="background: #f8d7da; color: #721c24;">❌ No Wide Door</span>
-            {% endif %}
+        <!-- Main column -->
+        <div class="detail-main">
 
-            {% if audit.has_elevator %}
-                <span class="badge badge-active">✅ Elevator Available</span>
-            {% else %}
-                <span class="badge" style="background: #f8d7da; color: #721c24;">❌ No Elevator</span>
-            {% endif %}
+            <section class="panel-card">
+                <h2 class="panel-title">Accessibility Features</h2>
 
-            {% if audit.has_accessible_restroom %}
-                <span class="badge badge-active">✅ PWD Accessible Restroom</span>
-            {% else %}
-                <span class="badge" style="background: #f8d7da; color: #721c24;">❌ No Accessible Restroom</span>
-            {% endif %}
-
-            {% if audit.has_tactical_signage %}
-                <span class="badge badge-active">✅ Tactile / Braille Signage</span>
-            {% else %}
-                <span class="badge" style="background: #f8d7da; color: #721c24;">❌ No Tactile Signage</span>
-            {% endif %}
-        </div>
-        <p class="post-meta">
-            Submitted by <strong>u/{{ audit.submitted_by_user.username }}</strong> on {{ audit.created_at|date:"M d, Y H:i" }}
-        </p>
-    </article>
-
-    <!-- Photos Card -->
-    <article class="audit-card" style="display: block;">
-        <h3 style="margin-bottom: 0.75rem; font-size: 1.15rem;">Attached Photos</h3>
-        {% if photos %}
-            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                {% for photo in photos %}
-                    <div style="text-align: center;">
-                        <img src="{{ photo.image_url }}" alt="Audit Photo" style="max-width: 240px; height: 160px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd;">
-                        <p style="font-size: 0.75rem; color: #777; margin-top: 0.25rem;">Uploaded {{ photo.uploaded_at|date:"M d, Y" }}</p>
-                    </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <p style="color: #777; font-size: 0.9rem;">No photos attached to this audit.</p>
-        {% endif %}
-    </article>
-
-    <!-- Verifications Card -->
-    <article class="audit-card" style="display: block;">
-        <h3 style="margin-bottom: 0.75rem; font-size: 1.15rem;">Community Verifications ({{ verifications|length }})</h3>
-
-        {% if user.is_authenticated %}
-            <form method="POST" action="{% url 'verify_audit' audit.audit_id %}" style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap;">
-                {% csrf_token %}
-                <label for="action" style="font-size: 0.9rem; font-weight: 600;">Confirm or Review:</label>
-                <select name="action" id="action" style="padding: 0.35rem 0.6rem; border: 1px solid #ccc; border-radius: 4px;">
-                    <option value="verified">Confirm Accessibility (Verified)</option>
-                    <option value="upvote">Upvote</option>
-                    <option value="flagged">Needs Review / Inaccurate</option>
-                </select>
-                <button type="submit" class="btn-new-audit" style="border: none; cursor: pointer;">Submit Action</button>
-            </form>
-        {% else %}
-            <p style="font-size: 0.9rem; margin-bottom: 1rem;">
-                <a href="{% url 'login' %}" style="color: #007bff; text-decoration: none;">Log in</a> to verify or review this audit.
-            </p>
-        {% endif %}
-
-        {% if verifications %}
-            <ul style="list-style: none; padding-left: 0; display: flex; flex-direction: column; gap: 0.5rem;">
-                {% for v in verifications %}
-                    <li style="font-size: 0.85rem; padding-bottom: 0.4rem; border-bottom: 1px solid #f0f0f0;">
-                        <strong>u/{{ v.user.username }}</strong> marked this as 
-                        <span class="badge" style="background: #e2e3e5; color: #383d41;">{{ v.action }}</span>
-                        <span style="color: #888; font-size: 0.75rem; margin-left: 0.3rem;">({{ v.created_at|date:"M d, Y H:i" }})</span>
+                <ul class="feature-grid">
+                    <li class="feature {% if audit.has_ramp_step_free %}is-yes{% else %}is-no{% endif %}">
+                        <span class="feature-icon" aria-hidden="true">{% if audit.has_ramp_step_free %}✓{% else %}✕{% endif %}</span>
+                        <span class="feature-text">
+                            <span class="feature-name">Ramp / Step-Free Access</span>
+                            <span class="feature-status">{% if audit.has_ramp_step_free %}Available{% else %}Not available{% endif %}</span>
+                        </span>
                     </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p style="color: #777; font-size: 0.9rem;">No community verifications recorded yet. Be the first to verify!</p>
-        {% endif %}
-    </article>
 
+                    <li class="feature {% if audit.has_wide_door %}is-yes{% else %}is-no{% endif %}">
+                        <span class="feature-icon" aria-hidden="true">{% if audit.has_wide_door %}✓{% else %}✕{% endif %}</span>
+                        <span class="feature-text">
+                            <span class="feature-name">Wide Doorway</span>
+                            <span class="feature-status">{% if audit.has_wide_door %}Available{% else %}Not available{% endif %}</span>
+                        </span>
+                    </li>
+
+                    <li class="feature {% if audit.has_elevator %}is-yes{% else %}is-no{% endif %}">
+                        <span class="feature-icon" aria-hidden="true">{% if audit.has_elevator %}✓{% else %}✕{% endif %}</span>
+                        <span class="feature-text">
+                            <span class="feature-name">Elevator</span>
+                            <span class="feature-status">{% if audit.has_elevator %}Available{% else %}Not available{% endif %}</span>
+                        </span>
+                    </li>
+
+                    <li class="feature {% if audit.has_accessible_restroom %}is-yes{% else %}is-no{% endif %}">
+                        <span class="feature-icon" aria-hidden="true">{% if audit.has_accessible_restroom %}✓{% else %}✕{% endif %}</span>
+                        <span class="feature-text">
+                            <span class="feature-name">PWD Accessible Restroom</span>
+                            <span class="feature-status">{% if audit.has_accessible_restroom %}Available{% else %}Not available{% endif %}</span>
+                        </span>
+                    </li>
+
+                    <li class="feature {% if audit.has_tactical_signage %}is-yes{% else %}is-no{% endif %}">
+                        <span class="feature-icon" aria-hidden="true">{% if audit.has_tactical_signage %}✓{% else %}✕{% endif %}</span>
+                        <span class="feature-text">
+                            <span class="feature-name">Tactile / Braille Signage</span>
+                            <span class="feature-status">{% if audit.has_tactical_signage %}Available{% else %}Not available{% endif %}</span>
+                        </span>
+                    </li>
+                </ul>
+
+                <p class="post-meta post-meta--footer">
+                    Submitted by <strong>u/{{ audit.submitted_by_user.username }}</strong>
+                    on {{ audit.created_at|date:"M d, Y H:i" }}
+                </p>
+            </section>
+
+            <section class="panel-card">
+                <h2 class="panel-title">Attached Photos</h2>
+
+                {% if photos %}
+                    <div class="photo-grid">
+                        {% for photo in photos %}
+                            <figure class="photo-item">
+                                <img src="{{ photo.image_url }}" alt="Accessibility audit photo of {{ audit.establishment.name }}" loading="lazy">
+                                <figcaption>Uploaded {{ photo.uploaded_at|date:"M d, Y" }}</figcaption>
+                            </figure>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="empty-note">No photos attached to this audit.</p>
+                {% endif %}
+            </section>
+        </div>
+
+        <!-- Sidebar: verifications -->
+        <aside class="detail-side">
+            <section class="panel-card">
+                <h2 class="panel-title">
+                    Community Verifications
+                    <span class="tab-count">{{ verifications|length }}</span>
+                </h2>
+
+                {% if user.is_authenticated %}
+                    <form method="POST" action="{% url 'verify_audit' audit.audit_id %}" class="verify-form">
+                        {% csrf_token %}
+                        <label for="action">Confirm or review this audit</label>
+                        <select name="action" id="action">
+                            <option value="verified">Confirm Accessibility (Verified)</option>
+                            <option value="upvote">Upvote</option>
+                            <option value="flagged">Needs Review / Inaccurate</option>
+                        </select>
+                        <button type="submit" class="btn-new-audit btn-block">Submit Action</button>
+                    </form>
+                {% else %}
+                    <p class="login-note">
+                        <a href="{% url 'login' %}">Log in</a> to verify or review this audit.
+                    </p>
+                {% endif %}
+
+                {% if verifications %}
+                    <ul class="verify-list">
+                        {% for v in verifications %}
+                            <li class="verify-item">
+                                <span><strong>u/{{ v.user.username }}</strong> marked this as</span>
+                                <span class="action-chip action-{{ v.action }}">{{ v.action }}</span>
+                                <span class="verify-date">{{ v.created_at|date:"M d, Y H:i" }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-note">No verifications yet. Be the first to verify!</p>
+                {% endif %}
+            </section>
+        </aside>
+
+    </div>
 </div>
 {% endblock %}

@@ -4,73 +4,91 @@
 {% block title %}Community Audits - Saka{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/audits/audits_page.css' %}?v=2">
+<link rel="stylesheet" href="{% static 'css/audits/audits_page.css' %}?v=3">
 {% endblock %}
 
 {% block content %}
-<div class="feed-container">
-    <header class="feed-header">
+<div class="audits-page">
+
+    <header class="page-header">
         <div>
-            <h2>Community Audits</h2>
+            <h1 class="page-title">Community Audits</h1>
+            <p class="page-lead">Accessibility reports from contributors across Metro Cebu.</p>
         </div>
-        <a href="{% url 'create_audit' %}" class="btn-new-audit">New Audit</a>
+        <a href="{% url 'create_audit' %}" class="btn-new-audit">+ New Audit</a>
     </header>
 
-    <!-- 1. JOIN RESULTS: Community Audits Feed -->
-    {% for audit in audits %}
-        <article class="audit-card">
-            <div class="vote-column">
-                <span class="vote-arrow">▲</span>
-                <span class="vote-count">{{ audit.verifications.count }}</span>
-                <span class="vote-label">checks</span>
-            </div>
+    <!-- Sub tabs -->
+    <div class="tabs" role="tablist" aria-label="Audit views">
+        <button type="button" class="tab is-active" role="tab" id="tab-feed"
+                data-tab="feed" aria-controls="panel-feed" aria-selected="true">
+            Audits Feed <span class="tab-count">{{ audits|length }}</span>
+        </button>
+        <button type="button" class="tab" role="tab" id="tab-places"
+                data-tab="places" aria-controls="panel-places" aria-selected="false" tabindex="-1">
+            Audited Establishments <span class="tab-count">{{ establishments|length }}</span>
+        </button>
+    </div>
 
-            <div class="card-main">
-                <div class="post-meta">
-                    <span class="establishment-category">{{ audit.establishment.category }}</span> 
-                    - Posted by u/{{ audit.submitted_by_user.username }} {{ audit.created_at|timesince }} ago
+    <!-- Tab 1: JOIN results — Community Audits feed -->
+    <section class="tab-panel" role="tabpanel" id="panel-feed" aria-labelledby="tab-feed">
+        {% for audit in audits %}
+            <article class="audit-card">
+                <div class="vote-column">
+                    <span class="vote-arrow" aria-hidden="true">▲</span>
+                    <span class="vote-count">{{ audit.verifications.count }}</span>
+                    <span class="vote-label">checks</span>
                 </div>
 
-                <h3 class="establishment-title">
-                    <a href="{% url 'audit_detail' audit.audit_id %}">
-                        {{ audit.establishment.name }}
-                    </a>
-                </h3>
-                <p class="establishment-address">{{ audit.establishment.address_text }}</p>
+                <div class="card-main">
+                    <p class="post-meta">
+                        <span class="chip">{{ audit.establishment.category }}</span>
+                        Posted by u/{{ audit.submitted_by_user.username }} {{ audit.created_at|timesince }} ago
+                    </p>
 
-                <div class="badge-list">
-                    {% if audit.has_ramp_step_free %}<span class="badge badge-active">✓ Ramp</span>{% endif %}
-                    {% if audit.has_wide_door %}<span class="badge badge-active">✓ Wide Door</span>{% endif %}
-                    {% if audit.has_elevator %}<span class="badge badge-active">✓ Elevator</span>{% endif %}
-                    {% if audit.has_accessible_restroom %}<span class="badge badge-active">✓ PWD Restroom</span>{% endif %}
-                    {% if audit.has_tactical_signage %}<span class="badge badge-active">✓ Tactile Signage</span>{% endif %}
+                    <h2 class="establishment-title">
+                        <a href="{% url 'audit_detail' audit.audit_id %}">{{ audit.establishment.name }}</a>
+                    </h2>
+                    <p class="establishment-address">{{ audit.establishment.address_text }}</p>
+
+                    <ul class="badge-list">
+                        {% if audit.has_ramp_step_free %}<li class="badge">✓ Ramp</li>{% endif %}
+                        {% if audit.has_wide_door %}<li class="badge">✓ Wide Door</li>{% endif %}
+                        {% if audit.has_elevator %}<li class="badge">✓ Elevator</li>{% endif %}
+                        {% if audit.has_accessible_restroom %}<li class="badge">✓ PWD Restroom</li>{% endif %}
+                        {% if audit.has_tactical_signage %}<li class="badge">✓ Tactile Signage</li>{% endif %}
+                    </ul>
+
+                    <div class="card-footer">
+                        <a href="{% url 'audit_detail' audit.audit_id %}" class="card-link">
+                            View details &amp; photos ({{ audit.photos.count }}) &rarr;
+                        </a>
+                    </div>
                 </div>
-
-                <footer class="card-footer">
-                    <a href="{% url 'audit_detail' audit.audit_id %}">
-                        💬 View Details & Photos ({{ audit.photos.count }})
-                    </a>
-                </footer>
-            </div>
-        </article>
-    {% empty %}
-        <p class="empty-state">No audits have been posted yet. Be the first to add one!</p>
-    {% endfor %}
-
-    <!-- 2. SUBQUERY RESULTS: Audited Establishments -->
-    <section class="audited-establishments-section">
-        <h2>Audited Establishments</h2>
-        <p>Showing only locations in Cebu City with submitted accessibility audits.</p>
-
-        {% for establishment in establishments %}
-            <div class="establishment-card">
-                <h3>{{ establishment.name }}</h3>
-                <p><strong>Category:</strong> {{ establishment.category }}</p>
-                <p><strong>Address:</strong> {{ establishment.address_text }}</p>
-            </div>
+            </article>
         {% empty %}
-            <p>No audited establishments yet.</p>
+            <p class="empty-state">No audits have been posted yet. Be the first to add one!</p>
         {% endfor %}
     </section>
+
+    <!-- Tab 2: SUBQUERY results — Audited establishments -->
+    <section class="tab-panel" role="tabpanel" id="panel-places" aria-labelledby="tab-places" hidden>
+        <p class="panel-lead">Only locations in Metro Cebu with at least one submitted accessibility audit.</p>
+
+        <div class="place-grid">
+            {% for establishment in establishments %}
+                <article class="place-card">
+                    <span class="chip">{{ establishment.category }}</span>
+                    <h2 class="place-name">{{ establishment.name }}</h2>
+                    <p class="place-address">{{ establishment.address_text }}</p>
+                </article>
+            {% empty %}
+                <p class="empty-state">No audited establishments yet.</p>
+            {% endfor %}
+        </div>
+    </section>
+
 </div>
+
+<script src="{% static 'js/audits/audit_list.js' %}?v=1" defer></script>
 {% endblock %}
