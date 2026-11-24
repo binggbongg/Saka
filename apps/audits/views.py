@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.db.models import Subquery
 from .models import Establishment, Audit, AuditPhoto, AuditVerification
 
 # Temporary preset establishments for testing prior to Google Maps integration
@@ -36,9 +37,27 @@ SAMPLE_ESTABLISHMENTS = [
 
 
 def audit_list_view(request):
-    """Displays all submitted audits and registered establishments."""
-    audits = Audit.objects.select_related('establishment', 'submitted_by_user').all().order_by('-created_at')
-    establishments = Establishment.objects.all().order_by('name')
+    """Displays all submitted audits (JOIN) and audited establishments (SUBQUERY)."""
+    # 1. SQL INNER JOIN: Retrieve audits with related establishment and user records
+    audits = Audit.objects.select_related(
+        'establishment', 
+        'submitted_by_user'
+    ).all().order_by('-created_at')
+
+    # 2. SQL SUBQUERY: Inner query gets establishment IDs that have at least one audit
+    audited_establishment_ids = Audit.objects.values('establishment_id')
+
+    # Outer query filters establishments matching the inner query IDs
+    establishments = Establishment.objects.filter(
+        establishment_id__in=Subquery(audited_establishment_ids)
+    ).order_by('name')
+
+    # Step 17 Verification: Print generated SQL statements to the terminal
+    print("\n=== GENERATED JOIN SQL ===")
+    print(audits.query)
+    print("\n=== GENERATED SUBQUERY SQL ===")
+    print(establishments.query)
+
     return render(request, 'audits/audit_list.html', {
         'audits': audits,
         'establishments': establishments
