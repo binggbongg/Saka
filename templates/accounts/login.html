@@ -4,35 +4,45 @@
 {% block title %}Log In - Saka{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/accounts/auth.css' %}">
+<link rel="stylesheet" href="{% static 'css/accounts/auth.css' %}?v=2">
 {% endblock %}
 
 {% block content %}
-<div class="auth-container">
-    <h1>Log In</h1>
-    <p class="auth-subtitle">Sign in to report and verify accessibility across Cebu.</p>
+<div class="auth-page">
+    <div class="auth-card">
 
-    {% if error %}
-        <div class="auth-error">{{ error }}</div>
-    {% endif %}
-
-    <form method="POST" action="{% url 'login' %}" class="auth-form">
-        {% csrf_token %}
-        <div class="auth-form-group">
-            <label for="username">Username</label>
-            <input type="text" id="username" placeholder="Enter your username" name="username" required autocomplete="username">
+        <div class="auth-photo">
+            <img src="{% get_media_prefix %}photo_bw.png" alt="">
         </div>
 
-        <div class="auth-form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" placeholder="Enter your password" name="password" required autocomplete="current-password">
+        <div class="auth-panel">
+            <h1>Account Login</h1>
+            <p class="auth-subtitle">Log in to check accessibility details and contribute real-world reviews</p>
+
+            {% if error %}
+                <div class="auth-error" role="alert">{{ error }}</div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'login' %}" class="auth-form">
+                {% csrf_token %}
+                <div class="auth-form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="username" required autocomplete="username">
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="password" required autocomplete="current-password">
+                </div>
+
+                <button type="submit" class="auth-btn-submit">Login</button>
+            </form>
+
+            <p class="auth-description">
+                <a href="{% url 'register' %}">create account?</a>
+            </p>
         </div>
 
-        <button type="submit" class="auth-btn-submit">Sign In</button>
-    </form>
-
-    <p class="auth-description">
-        Don't have an account? <a href="{% url 'register' %}">Create one here</a>
-    </p>
+    </div>
 </div>
 {% endblock %}

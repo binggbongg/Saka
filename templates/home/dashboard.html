@@ -4,56 +4,64 @@
 {% block title %}Dashboard - Saka{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/home/dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'css/home/dashboard.css' %}?v=2">
 {% endblock %}
 
 {% block content %}
 <div class="dashboard-container">
-    
-    <div class="dashboard-card">
+
+    <!-- Banner -->
+    <img
+        class="dashboard-banner"
+        src="{% get_media_prefix %}header_photo.png"
+        alt="Blue accessible parking signs beside a row of parked cars">
+
+    <!-- Hero copy -->
+    <section class="dashboard-hero">
         {% if user.is_authenticated %}
-            <h1 class="dashboard-title">Welcome back, {{ user.username }}!</h1>
-            <p class="dashboard-subtitle">
-                Explore accessibility reports, contribute new place audits, or manage your profile details.
-            </p>
-
-            <div class="dashboard-actions">
-                <a href="{% url 'audit_list' %}" class="btn-dash-primary">Community Audits</a>
-                <a href="{% url 'profile' %}" class="btn-dash-secondary">View Profile</a>
-                <a href="{% url 'logout' %}" class="btn-dash-logout">Log Out</a>
-            </div>
-        {% else %}
-            <h1 class="dashboard-title">Welcome to Saka</h1>
-            <p class="dashboard-subtitle">
-                You are currently browsing as a guest. Log in to submit audits and verify physical accessibility features.
-            </p>
-            <div class="dashboard-actions">
-                <a href="{% url 'login' %}" class="btn-dash-primary">Log In</a>
-                <a href="{% url 'audit_list' %}" class="btn-dash-secondary">View Public Audits</a>
-            </div>
+            <p class="dashboard-greeting">Welcome back, {{ user.username }}.</p>
         {% endif %}
-    </div>
 
-    <!-- Quick Shortcuts Grid -->
-    <div class="dashboard-grid">
-        <div class="shortcut-box">
-            <h3>Accessibility Feed</h3>
+        <h1 class="dashboard-title">Map real-world barriers before you step out the door</h1>
+
+        <p class="dashboard-subtitle">
+            Saka is a web-based crowdsourced accessibility mapping directory designed to help
+            persons with disabilities (PWDs), senior citizens, and caregivers assess the
+            physical accessibility of public establishments before visiting.
+        </p>
+
+        <div class="dashboard-actions">
+            {% if user.is_authenticated %}
+                <a href="{% url 'create_audit' %}" class="btn-dash-primary">Report Now</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn-dash-primary">Report Now</a>
+            {% endif %}
+            <a href="{% url 'audit_list' %}" class="btn-dash-secondary">Check Reports</a>
+        </div>
+    </section>
+
+    {% if user.is_authenticated %}
+    <!-- Quick shortcuts -->
+    <section class="dashboard-grid" aria-label="Shortcuts">
+        <a href="{% url 'audit_list' %}" class="shortcut-box">
+            <h2>Audits Feed</h2>
             <p>Browse recent audits submitted by local contributors.</p>
-            <a href="{% url 'audit_list' %}" class="shortcut-link">Go to Audits &rarr;</a>
-        </div>
+            <span class="shortcut-link">Go to audits</span>
+        </a>
 
-        <div class="shortcut-box">
-            <h3>Submit an Audit</h3>
-            <p>Report ramps, doors, elevators, and tactile paving.</p>
-            <a href="{% url 'create_audit' %}" class="shortcut-link">Create Audit &rarr;</a>
-        </div>
+        <a href="{% url 'create_audit' %}" class="shortcut-box">
+            <h2>Submit an Audit</h2>
+            <p>Report ramps, doors, elevators, restrooms, and tactile signage.</p>
+            <span class="shortcut-link">Create audit</span>
+        </a>
 
-        <div class="shortcut-box">
-            <h3>Profile & Aid Type</h3>
+        <a href="{% url 'profile' %}" class="shortcut-box">
+            <h2>Profile &amp; Mobility Aid</h2>
             <p>Keep your bio and mobility aid settings up to date.</p>
-            <a href="{% url 'profile' %}" class="shortcut-link">Manage Profile &rarr;</a>
-        </div>
-    </div>
+            <span class="shortcut-link">Manage profile</span>
+        </a>
+    </section>
+    {% endif %}
 
 </div>
 {% endblock %}

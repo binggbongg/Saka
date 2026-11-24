@@ -20,6 +20,10 @@ def register_view(request):
 
 
 def login_view(request):
+    # user will be redirected to home instead
+    if request.user.is_authenticated:
+        return redirect('/home/')
+
     error = None
     if request.method == "POST":
         u = request.POST.get('username')

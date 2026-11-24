@@ -1,3 +1,27 @@
+/*
+    Match the format(...) to your file extension:
+    .woff2 → format("woff2")
+    .woff → format("woff")
+    .ttf → format("truetype")
+    .otf → format("opentype")
+*/
+
+@font-face {
+    font-family: 'Coolvetica';
+    src: url("../fonts/Coolvetica\ Rg.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SFDisplay';
+    src: url("../fonts/SFPRODISPLAYREGULAR.OTF") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -5,7 +29,7 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'SFDisplay', Arial, sans-serif;
     background-color: #101010; 
     background-image: url("../../media/bg-pattern.svg");
     background-repeat: repeat;
@@ -40,8 +64,8 @@ body {
 }
 
 .nav-brand a {
-    font-size: 1.25rem;
-    font-weight: bold;
+    font-family: 'Coolvetica', Arial, sans-serif;
+    font-size: 2rem;
     color: #FFEA2D;
     text-decoration: none;
     display: flex;
@@ -52,13 +76,13 @@ body {
 .nav-links {
     display: flex;
     align-items: center;
-    gap: 1.25rem;
+    gap: 4rem;
 }
 
 .nav-item {
     text-decoration: none;
     color: #FFEA2D;
-    font-size: 0.92rem;
+    font-size: 1.05rem;
     font-weight: 500;
     transition: color 0.15s ease;
 }

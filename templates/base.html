@@ -14,19 +14,19 @@
     <header class="site-navbar">
         <div class="nav-container">
             <div class="nav-brand">
-                <a href="{% url 'dashboard' %}">♿ Saka</a>
+                <a href="{% url 'dashboard' %}">Saka</a>
             </div>
             
             <nav class="nav-links">
                 {% if user.is_authenticated %}
-                    <a href="{% url 'dashboard' %}" class="nav-item">Dashboard</a>
-                    <a href="{% url 'audit_list' %}" class="nav-item">Audits Feed</a>
-                    <a href="{% url 'create_audit' %}" class="nav-item">+ Submit Audit</a>
-                    <a href="{% url 'profile' %}" class="nav-item">Profile ({{ user.username }})</a>
-                    <a href="{% url 'logout' %}" class="nav-item btn-nav-logout">Log Out</a>
+                    <a href="{% url 'dashboard' %}" class="nav-item">home</a>
+                    <a href="{% url 'audit_list' %}" class="nav-item">audits</a>
+                    <a href="{% url 'create_audit' %}" class="nav-item">submit audit</a>
+                    <a href="{% url 'profile' %}" class="nav-item">profile ({{ user.username }})</a>
+                    <a href="{% url 'logout' %}" class="nav-item btn-nav-logout">logout</a>
                 {% else %}
-                    <a href="{% url 'audit_list' %}" class="nav-item">Audits</a>
-                    <a href="{% url 'login' %}" class="nav-item">Log In</a>
+                    <a href="{% url 'audit_list' %}" class="nav-item">audits</a>
+                    <a href="{% url 'login' %}" class="nav-item">login</a>
                 {% endif %}
             </nav>
         </div>
