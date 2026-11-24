@@ -6,7 +6,7 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f6f7f8; /* Clean neutral background */
+    background-color: #101010; 
     background-image: url("../../media/bg-pattern.svg");
     background-repeat: repeat;
     background-position: top left;
@@ -24,7 +24,7 @@ body {
     background-color: transparent;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     position: sticky;
-    padding-top: 1%;
+    padding: 1%;
     top: 0;
     z-index: 1000;
 }

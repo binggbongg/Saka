@@ -4,7 +4,7 @@
 {% block title %}Community Audits - Saka{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/audits/audits_page.css' %}">
+    <link rel="stylesheet" href="{% static 'css/audits/audits_page.css' %}?v=2">
 {% endblock %}
 
 {% block content %}
@@ -16,6 +16,7 @@
         <a href="{% url 'create_audit' %}" class="btn-new-audit">New Audit</a>
     </header>
 
+    <!-- 1. JOIN RESULTS: Community Audits Feed -->
     {% for audit in audits %}
         <article class="audit-card">
             <div class="vote-column">
@@ -27,7 +28,7 @@
             <div class="card-main">
                 <div class="post-meta">
                     <span class="establishment-category">{{ audit.establishment.category }}</span> 
-                    • Posted by u/{{ audit.submitted_by_user.username }} {{ audit.created_at|timesince }} ago
+                    - Posted by u/{{ audit.submitted_by_user.username }} {{ audit.created_at|timesince }} ago
                 </div>
 
                 <h3 class="establishment-title">
@@ -55,5 +56,21 @@
     {% empty %}
         <p class="empty-state">No audits have been posted yet. Be the first to add one!</p>
     {% endfor %}
+
+    <!-- 2. SUBQUERY RESULTS: Audited Establishments -->
+    <section class="audited-establishments-section">
+        <h2>Audited Establishments</h2>
+        <p>Showing only locations in Cebu City with submitted accessibility audits.</p>
+
+        {% for establishment in establishments %}
+            <div class="establishment-card">
+                <h3>{{ establishment.name }}</h3>
+                <p><strong>Category:</strong> {{ establishment.category }}</p>
+                <p><strong>Address:</strong> {{ establishment.address_text }}</p>
+            </div>
+        {% empty %}
+            <p>No audited establishments yet.</p>
+        {% endfor %}
+    </section>
 </div>
 {% endblock %}

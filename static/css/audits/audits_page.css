@@ -6,10 +6,10 @@
 
 body {
     background-color: #f6f7f8;
-    color: #1a1a1b;
+    color: #101010;;
     font-family: Arial, sans-serif;
     line-height: 1.5;
-    padding: 0 1rem;
+    padding: 0;
 }
 
 .feed-container {
@@ -32,6 +32,7 @@ body {
 .feed-header h2 {
     font-size: 1.6rem;
     font-weight: 700;
+    color: #FFEA2D;
 }
 
 .back-link {
@@ -123,4 +124,41 @@ body {
 
 .establishment-title a {
     text-decoration: none;
+}
+
+.audited-establishments-section {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid #FFEA2D;
+}
+
+.audited-establishments-section > h2 {
+    color: #FFEA2D;
+    margin-bottom: 0.25rem;
+}
+
+.audited-establishments-section > p {
+    color: #e1e4e8;
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+}
+
+.establishment-card {
+    background: #ffffff;
+    color: #101010;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 0.75rem;
+}
+
+.establishment-card h3 {
+    margin-bottom: 0.35rem;
+    font-size: 1.05rem;
+}
+
+.establishment-card p {
+    font-size: 0.88rem;
+    color: #444444;
+    margin-bottom: 0.2rem;
 }
