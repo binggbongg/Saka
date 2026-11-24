@@ -4,64 +4,91 @@
 {% block title %}User Profile - Saka{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/profile/profile.css' %}">
+<link rel="stylesheet" href="{% static 'css/profile/profile.css' %}?v=2">
 {% endblock %}
 
 {% block content %}
-<div class="profile-container">
-    <div class="profile-card">
-        <header class="profile-header">
-            <h2>Edit Profile</h2>
-            <p>Update your personal information and profile picture.</p>
-        </header>
+<div class="profile-page">
 
-        <!-- Display Logged In Username -->
-        <div class="readonly-field">
-            <span class="readonly-label">Username</span>
-            <span class="readonly-value">{{ user.username }}</span>
+    <!-- Page Header -->
+    <header class="page-header">
+        <div>
+            <h1 class="page-title">User Profile</h1>
+            <p class="page-lead">Your contributor details and submitted accessibility reports.</p>
+        </div>
+        <a href="{% url 'create_audit' %}" class="btn-action">+ New Audit</a>
+    </header>
+
+    <!-- Basic User Info Card -->
+    <section class="profile-card" aria-label="Account information">
+        <div class="profile-identity">
+            <span class="chip">Account</span>
+            <h2 class="profile-username">u/{{ user.username }}</h2>
+            <p class="profile-meta">
+                Member since {{ user.date_joined|date:"M d, Y" }}
+            </p>
         </div>
 
-        <form method="POST" enctype="multipart/form-data" class="profile-form">
-            {% csrf_token %}
+        <div class="profile-actions">
+            <button type="button" class="btn-edit-username" id="btn-edit-username">
+                Edit Username
+            </button>
+        </div>
+    </section>
 
-            <!-- General Form Errors -->
-            {% if form.non_field_errors %}
-                <div class="error-msg">{{ form.non_field_errors }}</div>
-            {% endif %}
+    <!-- User's Posted Audits Section -->
+    <section class="profile-audits" aria-labelledby="my-audits-heading">
+        <div class="section-bar">
+            <h2 class="section-heading" id="my-audits-heading">
+                My Audit Reports
+                <span class="section-count">{{ user_audits|length }}</span>
+            </h2>
+        </div>
 
-            <!-- Full Name Field -->
-            <div class="field-wrapper">
-                {{ form.full_name.label_tag }}
-                {{ form.full_name }}
-                {% if form.full_name.errors %}
-                    <span class="field-error">{{ form.full_name.errors }}</span>
-                {% endif %}
-            </div>
+        <div class="audit-list">
+            {% for audit in user_audits %}
+                <article class="audit-card">
+                    <div class="vote-column">
+                        <span class="vote-arrow" aria-hidden="true">▲</span>
+                        <span class="vote-count">{{ audit.verifications.count }}</span>
+                        <span class="vote-label">checks</span>
+                    </div>
 
-            <!-- Bio Field -->
-            <div class="field-wrapper">
-                {{ form.bio.label_tag }}
-                {{ form.bio }}
-                {% if form.bio.errors %}
-                    <span class="field-error">{{ form.bio.errors }}</span>
-                {% endif %}
-            </div>
+                    <div class="card-main">
+                        <p class="post-meta">
+                            <span class="chip">{{ audit.establishment.category }}</span>
+                            Posted {{ audit.created_at|timesince }} ago
+                        </p>
 
-            <!-- Profile Image Field -->
-            <div class="field-wrapper">
-                {{ form.profile_image.label_tag }}
-                {{ form.profile_image }}
-                {% if form.profile_image.errors %}
-                    <span class="field-error">{{ form.profile_image.errors }}</span>
-                {% endif %}
-            </div>
+                        <h3 class="establishment-title">
+                            <a href="{% url 'audit_detail' audit.audit_id %}">
+                                {{ audit.establishment.name }}
+                            </a>
+                        </h3>
+                        <p class="establishment-address">{{ audit.establishment.address_text }}</p>
 
-            <!-- Buttons -->
-            <div class="form-actions">
-                <button type="submit" class="btn-save">Save Changes</button>
-                <a href="{% url 'dashboard' %}" class="back-link">Cancel</a>
-            </div>
-        </form>
-    </div>
+                        <ul class="badge-list">
+                            {% if audit.has_ramp_step_free %}<li class="badge">✓ Ramp</li>{% endif %}
+                            {% if audit.has_wide_door %}<li class="badge">✓ Wide Door</li>{% endif %}
+                            {% if audit.has_elevator %}<li class="badge">✓ Elevator</li>{% endif %}
+                            {% if audit.has_accessible_restroom %}<li class="badge">✓ PWD Restroom</li>{% endif %}
+                            {% if audit.has_tactical_signage %}<li class="badge">✓ Tactile Signage</li>{% endif %}
+                        </ul>
+
+                        <div class="card-footer">
+                            <a href="{% url 'audit_detail' audit.audit_id %}" class="card-link">
+                                View details &amp; photos ({{ audit.photos.count }}) &rarr;
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            {% empty %}
+                <p class="empty-state">
+                    You haven't posted any accessibility audits yet. Click "+ New Audit" to submit your first report.
+                </p>
+            {% endfor %}
+        </div>
+    </section>
+
 </div>
 {% endblock %}
